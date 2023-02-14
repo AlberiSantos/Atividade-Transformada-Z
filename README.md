@@ -1,5 +1,7 @@
 ## Atividade-Transformada-Z
 
+Usando a Transformada z, projete uma função real, cuja amplitude seja constante e causal. Para essa função desenhe o diagrama de pólos e zeros, a posição do pólo e a transformada de Fourier.
+
 <details>
  <summary><strong>Descrição</strong></summary>
 Este script tem como objetivo implantar uma função real cuja
