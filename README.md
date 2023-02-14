@@ -32,4 +32,4 @@ Instituição: Universidade Federal de Campina Grande
 Desenvolvido por: Alberi Medeiros Santos
 </details>
 
-Repositório MedCar: https://github.com/AlberiSantos/Atividade-Transformada-Z
+Repositório Atividade Transformada Z: https://github.com/AlberiSantos/Atividade-Transformada-Z
