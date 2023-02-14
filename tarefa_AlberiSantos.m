@@ -20,67 +20,61 @@
 % pólos e zeros, a posição do pólo e a transformada de Fourier da função
 % serão desenhados com base nas equações matemáticas fornecidas na teroia
 % da disciplina.
-% 
+%
+clear;
+clc;
 
+% Definição da função e da variável z
+alpha=1 %função constante
+syms z; %Variavel em z
 
-% Parâmetros da função
-A = 1;   % Amplitude
-M = 10;  % Número de atrasos
+% Função x no tempo discreto
+syms n; % Variavel no tempo discreto
+x=alpha^n; % Função constante e igual a 1
 
-% Função de transferência H(z)
-z = tf('z', 1);
-H = A*(1 + z^(-1) + z^(-2) + z^(-3) + z^(-4) + z^(-5) + z^(-6) + z^(-7) + z^(-8) + z^(-9) + z^(-10));
+%Transformada z da função x
+H=ztrans(x); % Transformada z da função x
 
 % Coeficientes numéricos da função de transferência
-[num, den] = tfdata(H, 'v');
-b = num;
-a = den;
+[b,a]=numden(H); % numerador e denominador de z
+num=sym2poly(b); % transformando dados syms em polinomios
+den=sym2poly(a); % transformando dados syms em polinomios
+ts=0.01;        % tempo de amostragem no tempo discreto
 
-% Plot da resposta em frequência
-w = linspace(0, pi, 1000);
-Hw = freqz(b, a, w);
-figure(1);
-plot(w/pi, abs(Hw));
-xlabel('Frequência (x \pi rad/sample)');
-ylabel('|H(e^{j\omega})|');
-title('Resposta em frequência');
-grid on;
+% Função em z com tempo de amostragem ts
+Htf= tf(num, den, ts) 
 
 % Plot do diagrama de polos e zeros
-figure(2);
-zplane(b, a);
+figure(1)
+zplane(num, den) %polos e zeros da função em z
 xlabel('Parte real');
 ylabel('Parte imaginária');
 title('Diagrama de polos e zeros');
 grid on;
 
+% Criação do sinal discreto xNovo  
+xNovo=sym2poly(x) % transforma o x de syms para polinomio
+n=0:10-1;       % cria um vetor de tempo n
+xNovo=polyval(xNovo, n); % cria um vetor com os valores de x no tempo a partir do polinomio
+
+% Cálculo da transformada de Fourier discreta utilizando a função fft
+F=abs(fft(xNovo)); % Calcula o módulo da fft de xNovo
+
+% Criação do eixo de frequências normalizadas de 0 a pi
+w = linspace(0, pi, 10);
+
+% Criação do gráfico do módulo da transformada de Fourier discreta
+figure(2)
+plot(w/pi,F) % Plota o módulo da transformada de Fourier discreta
+xlabel('Frequência normalizada (\omega/\pi)') % Adiciona legenda ao eixo x
+ylabel('Magnitude') % Adiciona legenda ao eixo y
+title('Transformada de Fourier') % Adiciona título ao gráfico
+grid on % Adiciona grade ao gráfico para facilitar a visualização
+
 % Plot do sinal no tempo
-figure(3);
-n = 0:M;
-x = A*(n <= M);
-stem(n, x);
-xlabel('n');
-ylabel('x[n]');
-title('Sinal discreto x[n]');
-grid on;
-
-% Transformada de Fourier
-N = 1024;  % Número de amostras
-Xw = fft(x, N);
-w = linspace(0, 2*pi, N);
-
-% Plot do módulo da transformada de Fourier
-figure(4);
-plot(w/pi, abs(Xw));
-xlabel('Frequência (x \pi rad/sample)');
-ylabel('|X(e^{j\omega})|');
-title('Transformada de Fourier (módulo)');
-grid on;
-
-% Plot da fase da transformada de Fourier
-figure(5);
-plot(w/pi, angle(Xw));
-xlabel('Frequência (x \pi rad/sample)');
-ylabel('\angle X(e^{j\omega})');
-title('Transformada de Fourier (fase)');
+figure(3)
+stem(n,xNovo)
+xlabel('n')
+ylabel('x[n]')
+title('Sinal discreto x[n]')
 grid on;
